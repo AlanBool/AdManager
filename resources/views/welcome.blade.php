@@ -79,7 +79,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel success
+                    Laravel success 2
                 </div>
             </div>
         </div>
