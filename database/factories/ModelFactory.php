@@ -23,11 +23,10 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Admin\Models\Channel::class, function (Faker $faker) {
+$factory->define(App\Admin\Models\Channel::class, function (Faker\Generator $faker) {
     $now = \Carbon\Carbon::now()->toDateTimeString();
     return [
-        'title' => $faker->name,
-
+        'name' => $faker->word,
         'created_at' => $now,
         'updated_at' => $now,
     ];
