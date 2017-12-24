@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Channel extends Model
 {
     //
-    public $fillable = ['name','parent_id'];
+    public $fillable = ['name','parent_id','parent_id','add_user_id','token'];
 
     public function advertisements()
     {

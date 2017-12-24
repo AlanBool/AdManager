@@ -22,3 +22,13 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\Admin\Models\Channel::class, function (Faker $faker) {
+    $now = \Carbon\Carbon::now()->toDateTimeString();
+    return [
+        'title' => $faker->name,
+
+        'created_at' => $now,
+        'updated_at' => $now,
+    ];
+});

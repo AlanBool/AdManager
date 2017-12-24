@@ -17,6 +17,7 @@ class CreateChannelsTable extends Migration
             $table->increments('id')->comment('自增ID');
             $table->string('name')->comment('渠道名称');
             $table->unsignedInteger('parent_id')->default(0)->comment('父渠道id,0为父渠道');
+            $table->unsignedInteger('add_user_id')->comment('广告添加用户id');
             $table->uuid('token')->comment('渠道token');
             $table->timestamps();
             $table->index('token');
