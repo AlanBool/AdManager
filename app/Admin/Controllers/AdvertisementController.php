@@ -93,7 +93,7 @@ class AdvertisementController extends Controller
                 return join('&nbsp;', $channels);
             });
             $grid->created_at('创建时间');
-            $grid->updated_at('更改时间');
+            $grid->updated_at('最后更新时间');
         });
     }
 
@@ -114,8 +114,8 @@ class AdvertisementController extends Controller
             $form->text('loading_page', '落地页');
             $form->text('click_track_url', '广告上报地址');
             $form->multipleSelect('channels','投放渠道')->options($this->channelRepository->getAllDataPluckNameAndId());
-            $form->display('created_at', 'Created At');
-            $form->display('updated_at', 'Updated At');
+            $form->display('created_at', '创建时间');
+            $form->display('updated_at', '最后更新时间');
         });
     }
 
