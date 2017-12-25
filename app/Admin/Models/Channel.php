@@ -13,4 +13,10 @@ class Channel extends Model
     {
         return $this->belongsToMany(Advertisement::class)->withTimestamps();
     }
+
+
+    public function scopeNoDelete($query)
+    {
+        return $query->where('is_delete','F');
+    }
 }
