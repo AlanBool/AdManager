@@ -44,6 +44,7 @@ class AdvertisementTransformer extends Transformer
         $params = [
             'idfa' => '{idfa}',
             'gaid' => '{gaid}',
+            'payout' => '{payout}',
             'p' => '{p}',
         ];
 
