@@ -7,16 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Channel extends Model
 {
     //
-    public $fillable = ['name','parent_id','parent_id','add_user_id','token'];
+    public $hidden = ['parent_id','add_user_id','created_at','updated_at'];
 
     public function advertisements()
     {
         return $this->belongsToMany(Advertisement::class)->withTimestamps();
     }
 
-
-    public function scopeNoDelete($query)
+    public function isDelete()
     {
-        return $query->where('is_delete','F');
+        return $this->is_delete === 'T';
     }
 }

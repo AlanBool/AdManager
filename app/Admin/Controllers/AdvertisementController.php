@@ -112,7 +112,18 @@ class AdvertisementController extends Controller
                 'talking_data' => 'talking data'
             ]);
             $form->text('loading_page', '落地页');
-            $form->text('click_track_url', '广告上报地址');
+            $form->text('click_track_url', '广告点击上报地址');
+            $form->text('source', '广告来源');
+//            $form->select('source', '广告来源')->options([
+//                'baidu' => 'baidu',
+//            ]);
+            $form->text('source_offer_id', '广告来源id');
+            $form->text('payout', '广告单价');
+            $form->select('payout_type', '广告计费类型')->options([
+                'CPC' => 'CPC',
+                'CPI' => 'CPI',
+                'CPA' => 'CPA',
+            ]);
             $form->multipleSelect('channels','投放渠道')->options($this->channelRepository->getAllDataPluckNameAndId());
             $form->display('created_at', '创建时间');
             $form->display('updated_at', '最后更新时间');
@@ -126,6 +137,10 @@ class AdvertisementController extends Controller
             'track_type' => $request->get('track_type'),
             'loading_page'  => $request->get('loading_page'),
             'click_track_url' => $request->get('click_track_url'),
+            'source' => $request->get('source'),
+            'source_offer_id' => $request->get('source_offer_id'),
+            'payout' => $request->get('payout'),
+            'payout_type' => $request->get('payout_type'),
             'add_user_id' => Admin::user()->id,
             'update_user_id' => Admin::user()->id,
             'uuid' => Uuid::generate(),
@@ -152,6 +167,10 @@ class AdvertisementController extends Controller
                 'track_type' => $request->get('track_type'),
                 'loading_page'  => $request->get('loading_page'),
                 'click_track_url' => $request->get('click_track_url'),
+                'source' => $request->get('source'),
+                'source_offer_id' => $request->get('source_offer_id'),
+                'payout' => $request->get('payout'),
+                'payout_type' => $request->get('payout_type'),
                 'update_user_id' => Admin::user()->id,
             ];
             $advertisement->update($data);

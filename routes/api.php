@@ -21,5 +21,5 @@ Route::group([
         'prefix' => 'v1',
         'namespace' => 'App\\Api\\Controllers'
     ],function(){
-    Route::get('adlist','AdvertisementController@list');
+    Route::get('ads','AdvertisementController@adList');
 });
