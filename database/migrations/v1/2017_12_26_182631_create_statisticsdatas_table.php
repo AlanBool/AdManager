@@ -17,10 +17,13 @@ class CreateStatisticsdatasTable extends Migration
             $table->increments('id')->comment('自增ID');
             $table->uuid('advertisement_uuid')->comment('广告UUID');;
             $table->uuid('channel_uuid')->comment('渠道UUID');
-            $table->integer('click_count')->comment('点击总数');
-            $table->integer('conversion_count')->comment('转化总数');
-            $table->integer('total_cost')->comment('转化总额');
+            $table->integer('click_count')->default(0)->comment('点击总数');
+            $table->integer('conversion_count')->default(0)->comment('转化总数');
+            $table->float('total_cost')->default(0)->comment('转化总额');
+            $table->float('total_channel_cost')->default(0)->comment('渠道转化总额');
             $table->timestamps();
+            $table->index('advertisement_uuid');
+            $table->index('channel_uuid');
         });
     }
 

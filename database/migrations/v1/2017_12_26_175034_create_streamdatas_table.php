@@ -23,8 +23,12 @@ class CreateStreamdatasTable extends Migration
             $table->string('p',500)->comment('P参数');
             $table->string('ip')->comment('ip');
             $table->string('ua')->comment('ua');
+            $table->string('click_id',50)->comment('ua');
             $table->string('payout')->comment('转化单价');
             $table->timestamps();
+            $table->index('advertisement_uuid');
+            $table->index('channel_uuid');
+            $table->index('click_id');
         });
     }
 
