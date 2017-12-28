@@ -13,4 +13,5 @@ class Advertisement extends Model
     {
         return $this->belongsToMany(Channel::class)->withTimestamps();
     }
+
 }

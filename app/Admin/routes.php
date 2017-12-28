@@ -12,5 +12,6 @@ Route::group([
 
     $router->get('/', 'HomeController@index');
     $router->resource('advertisements', AdvertisementController::class);
+    $router->get('report/index', 'ReportController@index');
 
 });
