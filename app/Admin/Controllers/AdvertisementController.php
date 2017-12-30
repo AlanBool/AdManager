@@ -112,7 +112,7 @@ class AdvertisementController extends Controller
                 'talking_data' => 'talking data'
             ]);
             $form->text('loading_page', '落地页');
-            $form->text('click_track_url', '广告点击上报地址');
+//            $form->text('click_track_url', '广告点击上报地址');
             $form->text('source', '广告来源');
 //            $form->select('source', '广告来源')->options([
 //                'baidu' => 'baidu',
@@ -136,7 +136,7 @@ class AdvertisementController extends Controller
             'name' => $request->get('name'),
             'track_type' => $request->get('track_type'),
             'loading_page'  => $request->get('loading_page'),
-            'click_track_url' => $request->get('click_track_url'),
+//            'click_track_url' => $request->get('click_track_url'),
             'source' => $request->get('source'),
             'source_offer_id' => $request->get('source_offer_id'),
             'payout' => $request->get('payout'),
@@ -166,7 +166,7 @@ class AdvertisementController extends Controller
                 'name' => $request->get('name'),
                 'track_type' => $request->get('track_type'),
                 'loading_page'  => $request->get('loading_page'),
-                'click_track_url' => $request->get('click_track_url'),
+//                'click_track_url' => $request->get('click_track_url'),
                 'source' => $request->get('source'),
                 'source_offer_id' => $request->get('source_offer_id'),
                 'payout' => $request->get('payout'),

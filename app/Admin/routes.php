@@ -13,5 +13,6 @@ Route::group([
     $router->get('/', 'HomeController@index');
     $router->resource('advertisements', AdvertisementController::class);
     $router->get('report/index', 'ReportController@index');
-
+//    $router->resource('channels', ChannelController::class);
+    $router->get('channels', 'ChannelController@index');
 });
