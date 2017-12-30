@@ -57,6 +57,13 @@ class ReportController extends Controller
             $grid->channel()->name('渠道名称');
             $grid->click_count('点击数');
             $grid->conversion_count('转化数');
+            $grid->column('转化率')->display(function () {
+                if($this->click_count > 0){
+                    return round($this->conversion_count / $this->click_count,2) * 100 .'%';
+                }else{
+                    return '0%';
+                }
+            });
             $grid->total_cost('转化金额');
             $grid->created_at('日期');
 //            $grid->updated_at();
