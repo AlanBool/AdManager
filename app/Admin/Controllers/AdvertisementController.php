@@ -84,8 +84,8 @@ class AdvertisementController extends Controller
             $grid->id('ID')->sortable();
             $grid->column('name','广告名称');
             $grid->column('uuid','推广ID');
-            $grid->column('loading_page','广告跟踪类型');
-            $grid->column('track_type','落地页');
+            $grid->column('track_type','广告跟踪类型');
+            $grid->column('loading_page','落地页');
             $grid->channels('投放渠道')->display(function ($channels) {
                 $channels = array_map(function ($channel) {
                     return "<span class='label label-success'>{$channel['name']}</span>";
