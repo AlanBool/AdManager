@@ -109,7 +109,8 @@ class AdvertisementController extends Controller
             // 添加提交验证规则
             $form->text('name', '广告标题');
             $form->select('track_type', '广告跟踪类型')->options([
-                'talking_data' => 'talking data'
+                'talking_data' => 'talking data',
+                'paipaidai' => '拍拍贷',
             ]);
             $form->text('loading_page', '落地页');
 //            $form->text('click_track_url', '广告点击上报地址');

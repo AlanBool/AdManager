@@ -35,7 +35,7 @@ class AdvertisementTransformer extends Transformer
             'loading_page' => $this->transformLoadingPage($item),
             'payout' => $item['payout'] * $this->channel['discount'],
             'payout_type' => $item['payout_type'],
-            'click_report' => array($item['click_track_url']),
+//            'click_report' => array($item['click_track_url']),
         ];
     }
 
@@ -44,6 +44,8 @@ class AdvertisementTransformer extends Transformer
         $params = [
             'idfa' => '{idfa}',
             'gaid' => '{gaid}',
+            'deviceid' => '{deviceid}',
+            'mac' => '{mac}',
             'payout' => '{payout}',
             'p' => '{p}',
         ];

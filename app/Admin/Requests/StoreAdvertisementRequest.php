@@ -26,7 +26,7 @@ class StoreAdvertisementRequest extends FormRequest
         return [
             'name' => 'required|max:255',
             'loading_page' => 'required|max:255',
-            'click_track_url' => 'required|max:255',
+//            'click_track_url' => 'required|max:255',
         ];
     }
 
