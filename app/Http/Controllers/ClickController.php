@@ -138,9 +138,14 @@ class ClickController extends BaseController
     public function paiPaiDaiClickCallBack($params)
     {
         $url = 'http://gw.open.ppdai.com/marketing/AdvertiseService/SaveAdvertise';
+        $cbParams = [
+            'clickId' => $params['click_id'],
+            'uuid1' => $params['advertisement_uuid'],
+            'uuid2' => $params['channel_uuid'],
+        ];
         $data = [
             'AppId' => 'AppId',
-            'CallBackUrl' => '',
+            'CallBackUrl' => env('PAIPAIDAICALLBACKURL').'?'.http_build_query($cbParams),
             'DeviceId' => $params['deviceid'],
             'Idfa' => $params['idfa'],
             'Mac' => $params['mac'],
@@ -150,7 +155,6 @@ class ClickController extends BaseController
             'http_errors' => false,
             'timeout' => 1,
         ]);
-//        $res = $client->request('post', $url, ['json' => $data, 'http_errors' => false]);
         $res = $client->request('POST', $url, ['json' => $data]);
 //        dd($res->getBody()->getContents());
     }
