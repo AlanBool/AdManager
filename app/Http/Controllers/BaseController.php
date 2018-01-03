@@ -52,6 +52,6 @@ class BaseController extends Controller
 
     public function response($message)
     {
-        return \Response::json($message,$this->getCode());
+        return \Response::json(['code' => $this->getCode(),'message' => $message],$this->getCode());
     }
 }

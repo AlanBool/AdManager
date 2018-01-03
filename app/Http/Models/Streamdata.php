@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Streamdata extends Model
 {
-    public $fillable = ['advertisement_uuid','channel_uuid','type','idfa','click_id','gaid','p','ip','ua','payout'];
+    public $fillable = ['advertisement_uuid','channel_uuid','type','idfa','click_id','gaid','p','ip','ua','payout','clicktime','sys_click_id','url'];
 }

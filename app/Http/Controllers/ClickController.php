@@ -8,6 +8,7 @@ use App\Http\Repositories\StatisticdataRepository;
 use App\Http\Repositories\StreamdataRepository;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Webpatser\Uuid\Uuid;
 
 class ClickController extends BaseController
 {
@@ -15,6 +16,7 @@ class ClickController extends BaseController
     public $channel;
     public $statisticdata;
     public $streamdata;
+    public $client;
 
     /**
      * ClickController constructor.
@@ -29,6 +31,10 @@ class ClickController extends BaseController
         $this->channel = $channel;
         $this->statisticdata = $statisticdata;
         $this->streamdata = $streamdata;
+        $this->client = new Client([
+            'http_errors' => false,
+            'timeout' => 2,
+        ]);
     }
 
 
@@ -37,29 +43,27 @@ class ClickController extends BaseController
         $advertisement_uuid = $request->route()->parameter('ad_uuid'); // {user}
         $channel_uuid = $request->route()->parameter('ch_uuid'); // {role}
         $idfa = $request->get('idfa');
-        $gaid = $request->get('gaid');
-        $payout = $request->get('payout');
-        $p = $request->get('p');
-        $ip = $request->getClientIp();
-        $ua = $request->headers->get('User-Agent');
-        $ad = $this->advertisement->byUuid($advertisement_uuid);
-        $deviceid = $request->get('deviceid');
-        $mac = $request->get('mac');
-        $clickId = date('YmdHis').mt_rand(10000,99999);
+        $ip = $request->get('ip');
+        $useragent = $request->get('useragent');
+        $clicktime = $request->get('clicktime');
+        $wxidentify = $request->get('wxidentify');
+        $clickid = $request->get('clickid');
+        $url = $request->fullUrl();
+        $sys_click_id = Uuid::generate()->string;
+
         $params = [
             'advertisement_uuid' => $advertisement_uuid,
             'channel_uuid' => $channel_uuid,
-            'type' => 'click',
             'idfa' => $idfa,
-            'gaid' => $gaid,
-            'p' => $p,
             'ip' => $ip,
-            'ua' => $ua,
-            'payout' => $payout,
-            'click_id' => $clickId,
-            'deviceid' => $deviceid,
-            'mac' => $mac,
+            'useragent' => $useragent,
+            'click_id' => $clickid,
+            'clicktime' => $clicktime,
+            'sys_click_id' => $sys_click_id,
+            'wxidentify' => $wxidentify,
         ];
+
+        $ad = $this->advertisement->byUuid($advertisement_uuid);
         //广告不存在
         if(empty($ad)){
             return $this->responseNotFound('Ad not found');
@@ -83,12 +87,12 @@ class ClickController extends BaseController
             'channel_uuid' => $channel_uuid,
             'type' => 'click',
             'idfa' => $idfa,
-            'gaid' => $gaid,
-            'p' => $p,
             'ip' => $ip,
-            'ua' => $ua,
-            'payout' => $payout,
-            'click_id' => $clickId,
+            'ua' => $useragent,
+            'click_id' => $clickid,
+            'clicktime' => $clicktime,
+            'url' => $url,
+            'sys_click_id' => $sys_click_id,
         ];
         $this->streamdata->store($data);
         $statistics_data = $this->statisticdata->byAdUuidAndClUuid($advertisement_uuid, $channel_uuid);
@@ -102,39 +106,29 @@ class ClickController extends BaseController
         }else{
             $statistics_data->increment('click_count');
         }
-        //处理上游广告主的点击回传
-        $url = $this->transformClick($ad, $cl, $clickId);
-        $this->transformClickCallBack($ad, $cl, $params);
-        if(!empty($url)){
-            return redirect($url);
-        }else{
-            return $this->responseError('url is Invalid');
-        }
+        //处理汇报给上游
+        $this->transformClickCallBack($ad->track_type, $params);
+        return $this->response('success');
     }
 
-    public function transformClick($ad, $channel, $clickId)
+    public function transformClickCallBack($track_type, $params)
     {
-        $source = $ad->source;
-        $url = '';
-        switch ($source){
-            default:
-                $url = $ad->loading_page.'?clickId='.$clickId.'&subid='.$channel->name;
-        }
-        return $url;
-    }
-
-    public function transformClickCallBack($ad, $channel, $params)
-    {
-        $track_type = $ad->track_type;
         switch ($track_type){
             case 'paipaidai':
-                    $this->paiPaiDaiClickCallBack($params);
+                $this->paiPaiDaiClickCallBack($params);
+                break;
+            case 'talking_data':
+                $this->talkingDataClickCallBack($params);
                 break;
             default:
                 break;
         }
     }
 
+    /**
+     * 点击上报给PAIPAI贷
+     * @param $params
+     */
     public function paiPaiDaiClickCallBack($params)
     {
         $url = 'http://gw.open.ppdai.com/marketing/AdvertiseService/SaveAdvertise';
@@ -145,17 +139,26 @@ class ClickController extends BaseController
         ];
         $data = [
             'AppId' => 'AppId',
-            'CallBackUrl' => env('PAIPAIDAICALLBACKURL').'?'.http_build_query($cbParams),
+            'CallBackUrl' => env('CALLBACK_URL').'?'.http_build_query($cbParams),
             'DeviceId' => $params['deviceid'],
             'Idfa' => $params['idfa'],
             'Mac' => $params['mac'],
             'Source' => 1,
         ];
-        $client = new Client([
-            'http_errors' => false,
-            'timeout' => 1,
-        ]);
-        $res = $client->request('POST', $url, ['json' => $data]);
+        $res = $this->client->request('POST', $url, ['json' => $data]);
 //        dd($res->getBody()->getContents());
     }
+
+    public function talkingDataClickCallBack($params)
+    {
+        $cbParams = [
+            'uuid1' => $params['advertisement_uuid'],
+            'uuid2' => $params['channel_uuid'],
+            'uuid3' => $params['sys_click_id'],
+        ];
+        $callBackUrl = env('CALLBACK_URL').'?'.http_build_query($cbParams);
+        $url = "https://lnk0.com/RB14Mh?idfa=". $params['idfa'] ."&ip=". $params['ip'] ."&useragent=". $params['useragent'] ."&clicktime=". $params['clicktime'] ."&callback_url=". $callBackUrl;
+        $this->client->request('GET', $url);
+    }
+
 }

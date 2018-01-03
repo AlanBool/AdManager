@@ -15,6 +15,7 @@ class AlterStreamdatas3Table extends Migration
     {
         Schema::table('streamdatas', function (Blueprint $table) {
             $table->uuid('sys_click_id')->comment('系统产生的click_id,uuid格式')->nullable();
+            $table->string('clicktime')->comment('点击时间')->nullable();;
         });
     }
 
