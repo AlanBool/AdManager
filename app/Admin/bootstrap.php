@@ -17,7 +17,10 @@
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
+use Encore\Admin\Grid\Column;
+use App\Admin\Extensions\Popover;
 
 Encore\Admin\Form::forget(['map', 'editor']);
 app('view')->prependNamespace('admin', resource_path('views/admin'));
 app('translator')->addNamespace('admin', resource_path('lang/admin'));
+Column::extend('popover', Popover::class);

@@ -11,7 +11,9 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
+use Encore\Admin\Widgets\Box;
 use Illuminate\Http\Request;
+use function PHPSTORM_META\type;
 use Webpatser\Uuid\Uuid;
 
 class AdvertisementController extends Controller
@@ -85,12 +87,27 @@ class AdvertisementController extends Controller
             $grid->column('name','广告名称');
             $grid->column('uuid','推广ID');
             $grid->column('track_type','广告跟踪类型');
-            $grid->column('loading_page','落地页');
-            $grid->channels('投放渠道')->display(function ($channels) {
+//            $grid->column('loading_page','落地页');
+//            $grid->channels('投放渠道')->display(function ($channels) {
+//                $channels = array_map(function ($channel) {
+//                    return "<span class='label label-success'>{$channel['name']}</span>";
+//                }, $channels);
+//                return join('&nbsp;', $channels);
+//            })->popover('bottom');
+
+            $grid->channels('投放渠道&点击汇报链接')->display(function ($channels) {
                 $channels = array_map(function ($channel) {
-                    return "<span class='label label-success'>{$channel['name']}</span>";
+                    $url = "";
+                    switch ($channel['type']){
+                        case 'hotmobi':
+                                $url = env('API_URL').'click/'.$this->uuid.'/'.$channel['token'].'/to?idfa={idfa}&ip={ip}&useragent={useragent}&clicktime={clicktime}&wxidentify={wxidentify}&clickid={clickid}';
+                            break;
+                        default:
+                            break;
+                    }
+                    return  "<span class='label label-success'>{$channel['name']} : </span>".$url;
                 }, $channels);
-                return join('&nbsp;', $channels);
+                return join('<br/>', $channels);
             });
             $grid->created_at('创建时间');
             $grid->updated_at('最后更新时间');
@@ -112,19 +129,16 @@ class AdvertisementController extends Controller
                 'talking_data' => 'talking data',
                 'paipaidai' => '拍拍贷',
             ]);
-            $form->text('loading_page', '落地页');
-//            $form->text('click_track_url', '广告点击上报地址');
-            $form->text('source', '广告来源');
-//            $form->select('source', '广告来源')->options([
-//                'baidu' => 'baidu',
+//            $form->text('loading_page', '落地页');
+            $form->text('click_track_url', '广告点击上报地址');
+//            $form->text('source', '广告来源');
+//            $form->text('source_offer_id', '广告来源id');
+//            $form->text('payout', '广告单价');
+//            $form->select('payout_type', '广告计费类型')->options([
+//                'CPC' => 'CPC',
+//                'CPI' => 'CPI',
+//                'CPA' => 'CPA',
 //            ]);
-            $form->text('source_offer_id', '广告来源id');
-            $form->text('payout', '广告单价');
-            $form->select('payout_type', '广告计费类型')->options([
-                'CPC' => 'CPC',
-                'CPI' => 'CPI',
-                'CPA' => 'CPA',
-            ]);
             $form->multipleSelect('channels','投放渠道')->options($this->channelRepository->getAllDataPluckNameAndId());
             $form->display('created_at', '创建时间');
             $form->display('updated_at', '最后更新时间');
@@ -136,12 +150,12 @@ class AdvertisementController extends Controller
         $data = [
             'name' => $request->get('name'),
             'track_type' => $request->get('track_type'),
-            'loading_page'  => $request->get('loading_page'),
-//            'click_track_url' => $request->get('click_track_url'),
-            'source' => $request->get('source'),
-            'source_offer_id' => $request->get('source_offer_id'),
-            'payout' => $request->get('payout'),
-            'payout_type' => $request->get('payout_type'),
+//            'loading_page'  => $request->get('loading_page'),
+            'click_track_url' => $request->get('click_track_url'),
+//            'source' => $request->get('source'),
+//            'source_offer_id' => $request->get('source_offer_id'),
+//            'payout' => $request->get('payout'),
+//            'payout_type' => $request->get('payout_type'),
             'add_user_id' => Admin::user()->id,
             'update_user_id' => Admin::user()->id,
             'uuid' => Uuid::generate(),
@@ -166,12 +180,12 @@ class AdvertisementController extends Controller
             $data = [
                 'name' => $request->get('name'),
                 'track_type' => $request->get('track_type'),
-                'loading_page'  => $request->get('loading_page'),
-//                'click_track_url' => $request->get('click_track_url'),
-                'source' => $request->get('source'),
-                'source_offer_id' => $request->get('source_offer_id'),
-                'payout' => $request->get('payout'),
-                'payout_type' => $request->get('payout_type'),
+//                'loading_page'  => $request->get('loading_page'),
+                'click_track_url' => $request->get('click_track_url'),
+//                'source' => $request->get('source'),
+//                'source_offer_id' => $request->get('source_offer_id'),
+//                'payout' => $request->get('payout'),
+//                'payout_type' => $request->get('payout_type'),
                 'update_user_id' => Admin::user()->id,
             ];
             $advertisement->update($data);

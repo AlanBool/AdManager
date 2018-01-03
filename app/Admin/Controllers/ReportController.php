@@ -42,6 +42,20 @@ class ReportController extends Controller
             $grid->disableRowSelector();
             $grid->filter(function($filter){
 //                $filter->useModal();
+                // 关系查询，查询对应关系`advertisement`的字段
+//                $filter->disableIdFilter();
+                $filter->where(function ($query) {
+                    $input = $this->input;
+                    $query->whereHas('advertisement', function ($query) use ($input) {
+                        $query->where('id', "{$input}");
+                    });
+                }, '广告Id');
+                $filter->where(function ($query) {
+                    $input = $this->input;
+                    $query->whereHas('channel', function ($query) use ($input) {
+                        $query->where('id', "{$input}");
+                    });
+                }, '渠道ID');
                 $filter->between('created_at', '日期')->datetime();
             });
 
@@ -64,7 +78,7 @@ class ReportController extends Controller
                     return '0%';
                 }
             });
-            $grid->total_cost('转化金额');
+//            $grid->total_cost('转化金额');
             $grid->created_at('日期');
 //            $grid->updated_at();
         });
