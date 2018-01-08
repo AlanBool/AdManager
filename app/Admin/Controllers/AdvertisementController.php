@@ -11,9 +11,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
-use Encore\Admin\Widgets\Box;
 use Illuminate\Http\Request;
-use function PHPSTORM_META\type;
 use Webpatser\Uuid\Uuid;
 
 class AdvertisementController extends Controller
@@ -129,7 +127,7 @@ class AdvertisementController extends Controller
                 'talking_data' => 'talking data',
                 'paipaidai' => '拍拍贷',
             ]);
-//            $form->text('loading_page', '落地页');
+            $form->text('loading_page', '落地页');
             $form->text('click_track_url', '广告点击上报地址');
 //            $form->text('source', '广告来源');
 //            $form->text('source_offer_id', '广告来源id');
@@ -150,7 +148,7 @@ class AdvertisementController extends Controller
         $data = [
             'name' => $request->get('name'),
             'track_type' => $request->get('track_type'),
-//            'loading_page'  => $request->get('loading_page'),
+            'loading_page'  => $request->get('loading_page'),
             'click_track_url' => $request->get('click_track_url'),
 //            'source' => $request->get('source'),
 //            'source_offer_id' => $request->get('source_offer_id'),
@@ -180,7 +178,7 @@ class AdvertisementController extends Controller
             $data = [
                 'name' => $request->get('name'),
                 'track_type' => $request->get('track_type'),
-//                'loading_page'  => $request->get('loading_page'),
+                'loading_page'  => $request->get('loading_page'),
                 'click_track_url' => $request->get('click_track_url'),
 //                'source' => $request->get('source'),
 //                'source_offer_id' => $request->get('source_offer_id'),
