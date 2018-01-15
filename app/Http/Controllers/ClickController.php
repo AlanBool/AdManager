@@ -159,6 +159,7 @@ class ClickController extends BaseController
         ];
         $callBackUrl = env('CALLBACK_URL').'?'.http_build_query($cbParams);
         $url = "https://lnk0.com/RB14Mh?idfa=". $params['idfa'] ."&ip=". $params['ip'] ."&useragent=". $params['useragent'] ."&clicktime=". $params['clicktime'] ."&callback_url=". $callBackUrl;
+        echo $url."\n";
         $this->client->request('GET', $url);
     }
 
