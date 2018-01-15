@@ -107,7 +107,7 @@ class ClickController extends BaseController
             $statistics_data->increment('click_count');
         }
         //处理汇报给上游
-        $this->transformClickCallBack($ad->track_type, $params);
+        $this->transformClickCallBack($ad, $params);
         return $this->response('success');
     }
 
