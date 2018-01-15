@@ -145,6 +145,7 @@ class ClickController extends BaseController
             'Mac' => $params['mac'],
             'Source' => 1,
         ];
+        echo $url."\n";
         $res = $this->client->request('POST', $url, ['json' => $data]);
 //        dd($res->getBody()->getContents());
     }
