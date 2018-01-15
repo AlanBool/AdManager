@@ -111,14 +111,14 @@ class ClickController extends BaseController
         return $this->response('success');
     }
 
-    public function transformClickCallBack($track_type, $params)
+    public function transformClickCallBack($ad, $params)
     {
-        switch ($track_type){
+        switch ($ad->track_type){
             case 'paipaidai':
                 $this->paiPaiDaiClickCallBack($params);
                 break;
             case 'talking_data':
-                $this->talkingDataClickCallBack($params);
+                $this->talkingDataClickCallBack($params,$ad);
                 break;
             default:
                 break;
@@ -150,7 +150,7 @@ class ClickController extends BaseController
 //        dd($res->getBody()->getContents());
     }
 
-    public function talkingDataClickCallBack($params)
+    public function talkingDataClickCallBack($params, $ad)
     {
         $cbParams = [
             'uuid1' => $params['advertisement_uuid'],
@@ -158,9 +158,12 @@ class ClickController extends BaseController
             'uuid3' => $params['sys_click_id'],
         ];
         $callBackUrl = env('CALLBACK_URL').'?'.http_build_query($cbParams);
-        $url = "https://lnk0.com/RB14Mh?idfa=". $params['idfa'] ."&ip=". $params['ip'] ."&useragent=". $params['useragent'] ."&clicktime=". $params['clicktime'] ."&callback_url=". $callBackUrl;
-        echo $url."\n";
-        $this->client->request('GET', $url);
+        $rep_key = array('/{idfa}/','/{ip}/','/{useragent}/','/{clicktime}}/','/{callback_url}/');
+        $rep_value = array($params['idfa'],$params['ip'],$params['useragent'],$params['clicktime'],$callBackUrl);
+        $track_url = preg_replace($rep_key, $rep_value, $ad->click_track_url);
+//        $url = "https://lnk0.com/RB14Mh?idfa=". $params['idfa'] ."&ip=". $params['ip'] ."&useragent=". $params['useragent'] ."&clicktime=". $params['clicktime'] ."&callback_url=". $callBackUrl;
+        echo $track_url."\n";
+        $this->client->request('GET', $track_url);
     }
 
 }
