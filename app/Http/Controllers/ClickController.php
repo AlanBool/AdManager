@@ -163,7 +163,8 @@ class ClickController extends BaseController
         $track_url = preg_replace($rep_key, $rep_value, $ad->click_track_url);
 //        $url = "https://lnk0.com/RB14Mh?idfa=". $params['idfa'] ."&ip=". $params['ip'] ."&useragent=". $params['useragent'] ."&clicktime=". $params['clicktime'] ."&callback_url=". $callBackUrl;
         echo $track_url."\n";
-        $this->client->request('GET', $track_url);
+        $res = $this->client->request('GET', $track_url);
+        dd($res);
     }
 
 }
