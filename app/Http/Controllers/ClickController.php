@@ -159,7 +159,7 @@ class ClickController extends BaseController
         ];
         $callBackUrl = env('CALLBACK_URL').'?'.http_build_query($cbParams);
         $rep_key = array('/{idfa}/','/{ip}/','/{useragent}/','/{clicktime}/','/{callback_url}/');
-        $rep_value = array($params['idfa'],$params['ip'],$params['useragent'],$params['clicktime'],$callBackUrl);
+        $rep_value = array($params['idfa'],$params['ip'],urlencode($params['useragent']),$params['clicktime'],urlencode($callBackUrl));
         $track_url = preg_replace($rep_key, $rep_value, $ad->click_track_url);
 //        $url = "https://lnk0.com/RB14Mh?idfa=". $params['idfa'] ."&ip=". $params['ip'] ."&useragent=". $params['useragent'] ."&clicktime=". $params['clicktime'] ."&callback_url=". $callBackUrl;
         echo $track_url."\n";
