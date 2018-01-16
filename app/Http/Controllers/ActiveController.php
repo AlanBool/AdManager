@@ -119,6 +119,8 @@ class ActiveController extends BaseController
         ];
         $pre_url = "http://cpa.adunite.com/api/activate.api?wxidentify={wxidentify}&clickid={clickid}&clicktime={clicktime}&ip={ip}&idfa={idfa}";
         $url = preg_replace($rep_key, $rep_val, $pre_url);
-        $this->client->request('GET', $url);
+        echo $url;
+        $res = $this->client->request('GET', $url);
+        dd($res);
     }
 }
