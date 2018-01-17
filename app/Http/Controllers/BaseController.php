@@ -59,6 +59,7 @@ class BaseController extends Controller
 
     public function writeLog($fileType, $data){
         $filename = $fileType.'_'.date('Ymd').'.log';
+        $data = array_merge(['logtime' => date('Y-m-d H:i:s')], $data);
         $jsonData = json_encode($data);
         Storage::disk('local')->append($filename,$jsonData);
     }
