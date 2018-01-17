@@ -44,6 +44,8 @@ class ActiveController extends BaseController
         $sys_click_id = $request->get('uuid3');//系统生成的click_id
         $url = $request->fullUrl();
 
+        $this->writeLog('source_conversion_url',['url' => $url,'ip'=>$request->get('ip')]);
+
         $conversion_count = $this->streamdata->getConversionCountBySysClickId($sys_click_id);
         if($conversion_count <= 0){
             $statistics_data = $this->statisticdata->byAdUuidAndClUuid($advertisement_uuid, $channel_uuid);

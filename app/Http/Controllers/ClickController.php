@@ -50,7 +50,7 @@ class ClickController extends BaseController
         $clickid = $request->get('clickid');
         $url = $request->fullUrl();
         $sys_click_id = Uuid::generate()->string;
-
+        $this->writeLog('source_click_url',['url' => $url,'ip'=>$ip]);
         $params = [
             'advertisement_uuid' => $advertisement_uuid,
             'channel_uuid' => $channel_uuid,
