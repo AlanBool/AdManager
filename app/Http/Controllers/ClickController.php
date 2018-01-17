@@ -167,7 +167,7 @@ class ClickController extends BaseController
             'url' => $track_url,
             'data' => [],
             'retheadercode' => $res->getStatusCode(),
-            'body' => $res->getBody(),
+            'body' => $res->getBody()->getContents(),
         ];
         $this->writeLog('click',$logData);
     }

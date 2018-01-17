@@ -126,7 +126,7 @@ class ActiveController extends BaseController
             'url' => $url,
             'data' => [],
             'retheadercode' => $res->getStatusCode(),
-            'body' => $res->getBody(),
+            'body' => $res->getBody()->getContents(),
         ];
         $this->writeLog('conversion',$logData);
     }
