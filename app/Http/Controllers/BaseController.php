@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
+
 class BaseController extends Controller
 {
     protected $code = 200;
@@ -53,5 +55,11 @@ class BaseController extends Controller
     public function response($message)
     {
         return \Response::json(['code' => $this->getCode(),'message' => $message],$this->getCode());
+    }
+
+    public function writeLog($fileType, $data){
+        $filename = $fileType.'_'.date('Ymd').'.log';
+        $jsonData = json_encode($data);
+        Storage::disk('local')->append($filename,$jsonData);
     }
 }

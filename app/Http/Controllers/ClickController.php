@@ -162,9 +162,14 @@ class ClickController extends BaseController
         $rep_value = array($params['idfa'],$params['ip'],urlencode($params['useragent']),$params['clicktime'],urlencode($callBackUrl));
         $track_url = preg_replace($rep_key, $rep_value, $ad->click_track_url);
 //        $url = "https://lnk0.com/RB14Mh?idfa=". $params['idfa'] ."&ip=". $params['ip'] ."&useragent=". $params['useragent'] ."&clicktime=". $params['clicktime'] ."&callback_url=". $callBackUrl;
-        echo $track_url."\n";
         $res = $this->client->request('GET', $track_url);
-        dd($res);
+        $logData = [
+            'url' => $track_url,
+            'data' => [],
+            'retheadercode' => $res->getStatusCode(),
+            'body' => $res->getBody(),
+        ];
+        $this->writeLog('click',$logData);
     }
 
 }
