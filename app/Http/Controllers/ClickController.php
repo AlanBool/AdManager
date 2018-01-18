@@ -194,7 +194,7 @@ class ClickController extends BaseController
 
     public function sortToSignPaiPaiDai($request)
     {
-        $obj = json_decode($request);
+        $obj = json_decode($request,true);
         $arr = array();
         foreach ($obj as $key=>$value){
             if(is_array($value)){
@@ -213,23 +213,23 @@ class ClickController extends BaseController
     }
 
     function signPaiPaiDai($str){
-        $appPrivateKey ="
+        $appPrivateKey =<<<EOF
 -----BEGIN RSA PRIVATE KEY-----
-MIICXgIBAAKBgQCmL1sJ4/hZmqou8nFqjtK175SJFeBPPly8a5ThjgWsGAVZmyJW
-3PwM7KmwyeDy1BD8f2cHGsewMipEbBKegpSkqQg+ZaCsQJLKW64jRJXVFCIJBhhu
-cbK8gX8VHPK4B84EfEhuuZ/Gcb0pU2XCZx3igQmlM/I4aBihKo5btelMwwIDAQAB
-AoGAMY+j7fIwCcEHihLB4k6P5rR5rtx4Vgm6LHNFJnNtm6JaThvnBNLI1K3r+Y5r
-aN/35OW1+zdwYErFsjws3VsCKxFVQXOUdu7vSta7swFl9LXyO5TIr0eReX3EVuaB
-Rz7GS0hXm9sDiLZjJWHf7JEn+voZyax+2hAtLfMKbS5qeRECQQDou5ZYbFlJF8Zs
-aoZn4wpxJZfAtkqAEqzXNS2tu7Q237ebFEuBEMmWVdBl8pG9koSxs0w6p+8TWEFd
-2jQMJhspAkEAtsyWVQjpITvi1fBMx5/Pp4uBOWHTQcnAU9t6tcwtjwciIfYkavRX
-7aaqgGELKWZS2IkAGayyhUNg6PozNFtSCwJBALNBeSWWHpcr1ss+qVNvDmXj3KS0
-Q2GuAK6p6Qr9nmr9mX+6/ATnFz3RzvgXA6YOKmJshXRQUNaHjaFqJdiNqTECQQC1
-T0kQwMzTDN4ZysWs/oLtsL4Ul0X9q8mao0gcB49snOuq+cP3XbHU4wmcWiTDBF3J
-rmEuFg/fhAwcKQYeuTEvAkEA4wCxtbUvAgETre9g9vWOkhZo+oqU3AZJF2/gQgis
-2ZO7L3tjvXTBfyi5unQ+uw15vti1+Oz6sfPD3n6hsRtovw==
+MIICXAIBAAKBgQChIW1pTlWA93N8AVwV9VlGOAnck5yPYV3wQ2rwKwYWGAeOLaL+
+xnkEITS66/cj+AEvOODXpoFvUgeZjWGMbMhd2G5LDpN2NR2LxX6PqSnXwGr4pdES
+GECZfPeuD/co7UNPJ93u9FiGgXLcugHlyKwKHtZ7lPHr5pTuY6CAPtaGtQIDAQAB
+AoGAYGhLunIwHpXv9wYpPsopvCXTYLLBPdiYCCWOWlyjq5x9CMiteZru1VW44w5E
+NLUyoDp77Qum7iA6g9lfwFFmICrVGkEJ+gc7JZm0VtUtmu+ZYELYK0qiWsWkR6lO
+Hqzuk/asvA/RYdW7CHoSZT1RC1D0IxsJGTBLDPttmhzuyRECQQDqRzn9MyTOEOoF
+k+KKiERRnbCLT91HN5FSj6d/7MbGniGovUNbKrqoT/mdG0V+S6htFhdFAq23ubfr
+zLJ7U3yHAkEAsBH8Nu1k9FIkoTg04PjZhCKmlY2fcx3wvbK0WBDOxGT7iA3gSzET
+bwcPlB7oQ4uzjNRKaX/Poadks1n4QvHN4wJBAKHzSur1h+PLXXstl9UcDd49m+Ux
++E1a5GKmW6vbCi4S8kGrU/yZtR7U6kDosUl1E6EVPFDAYUY4ZCPlBRyrwdECQAHB
+HB87/E6G5wCIO9amBBzR75D76UPPX4+0USGzgSvpyavQX5TAN25axqf2KuBJaw+T
+Ke6lLF9y+Ijk85lPKXsCQBdlo8w9dwsOZSY4Hqj2YMVWzsh/ECM5VZV0N45NS9ol
+fUgUyBzgrqRKDl++z5CR+x8wop9l6OLLxSXtwRjIrKg=
 -----END RSA PRIVATE KEY-----
-";
+EOF;
         if(openssl_sign($str,$sign,$appPrivateKey))
             $sign = base64_encode($sign);
         return $sign;
