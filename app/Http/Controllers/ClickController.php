@@ -132,22 +132,42 @@ class ClickController extends BaseController
     public function paiPaiDaiClickCallBack($params)
     {
         $url = 'http://gw.open.ppdai.com/marketing/AdvertiseService/SaveAdvertise';
+        $appid = "9488b36b0b634e3d8439393d6fb0804a";
         $cbParams = [
             'clickId' => $params['click_id'],
             'uuid1' => $params['advertisement_uuid'],
             'uuid2' => $params['channel_uuid'],
         ];
+        $timestamp = gmdate ( "Y-m-d H:i:s", time ()); // UTC format
+        $cbUrl = env('CALLBACK_URL').'?'.http_build_query($cbParams);
         $data = [
-            'AppId' => 'AppId',
-            'CallBackUrl' => env('CALLBACK_URL').'?'.http_build_query($cbParams),
-            'DeviceId' => $params['deviceid'],
-            'Idfa' => $params['idfa'],
-            'Mac' => $params['mac'],
-            'Source' => 1,
+            'AppId' => '9488b36b0b634e3d8439393d6fb0804a',
+            'CallBackUrl' => urlencode($cbUrl),
+            'DeviceId' => isset($params['deviceid'])?$params['deviceid']:"22",
+            'Idfa' => isset($params['idfa'])?$params['idfa']:"",
+            'Mac' => isset($params['mac'])?$params['mac']:"",
+            'Source' => 381,
         ];
-        echo $url."\n";
-        $res = $this->client->request('POST', $url, ['json' => $data]);
-//        dd($res->getBody()->getContents());
+        $jsonData = json_encode($data);
+        $requestSignStr = $this->sortToSignPaiPaiDai($jsonData);
+        $timestampSign = $this->signPaiPaiDai($appid.$timestamp);
+        $sign = $this->signPaiPaiDai($requestSignStr);
+        $headers = [
+            'Content-Type' => 'application/json;charset=UTF-8',
+            'X-PPD-APPID' => $appid,
+            'X-PPD-TIMESTAMP' => $timestamp,
+            'X-PPD-TIMESTAMP-SIGN' => $timestampSign,
+            'X-PPD-SIGN' => $sign,
+            'X-PPD-SIGNVERSION' => 1,
+            'X-PPD-SERVICEVERSION' => 1,
+        ];
+        $res = $this->client->request('POST', $url, ['body' => $jsonData,'headers' => $headers]);
+//        echo $timestamp."\n";
+//        echo $timestampSign ."\n";
+//        echo $sign ."\n";
+//        echo $requestSignStr."\n";
+//        echo $jsonData."\n";
+        dd($headers,$res->getBody()->getContents());
     }
 
     public function talkingDataClickCallBack($params, $ad)
@@ -170,6 +190,49 @@ class ClickController extends BaseController
             'body' => $res->getBody()->getContents(),
         ];
         $this->writeLog('click',$logData);
+    }
+
+    public function sortToSignPaiPaiDai($request)
+    {
+        $obj = json_decode($request);
+        $arr = array();
+        foreach ($obj as $key=>$value){
+            if(is_array($value)){
+                continue;
+            }else{
+                $arr[$key] = $value;
+            }
+        }
+        ksort($arr);
+        $str = "";
+        foreach ($arr as $key => $value){
+            $str = $str.$key.$value;
+        }
+        $str = strtolower($str);
+        return $str;
+    }
+
+    function signPaiPaiDai($str){
+        $appPrivateKey ="
+-----BEGIN RSA PRIVATE KEY-----
+MIICXgIBAAKBgQCmL1sJ4/hZmqou8nFqjtK175SJFeBPPly8a5ThjgWsGAVZmyJW
+3PwM7KmwyeDy1BD8f2cHGsewMipEbBKegpSkqQg+ZaCsQJLKW64jRJXVFCIJBhhu
+cbK8gX8VHPK4B84EfEhuuZ/Gcb0pU2XCZx3igQmlM/I4aBihKo5btelMwwIDAQAB
+AoGAMY+j7fIwCcEHihLB4k6P5rR5rtx4Vgm6LHNFJnNtm6JaThvnBNLI1K3r+Y5r
+aN/35OW1+zdwYErFsjws3VsCKxFVQXOUdu7vSta7swFl9LXyO5TIr0eReX3EVuaB
+Rz7GS0hXm9sDiLZjJWHf7JEn+voZyax+2hAtLfMKbS5qeRECQQDou5ZYbFlJF8Zs
+aoZn4wpxJZfAtkqAEqzXNS2tu7Q237ebFEuBEMmWVdBl8pG9koSxs0w6p+8TWEFd
+2jQMJhspAkEAtsyWVQjpITvi1fBMx5/Pp4uBOWHTQcnAU9t6tcwtjwciIfYkavRX
+7aaqgGELKWZS2IkAGayyhUNg6PozNFtSCwJBALNBeSWWHpcr1ss+qVNvDmXj3KS0
+Q2GuAK6p6Qr9nmr9mX+6/ATnFz3RzvgXA6YOKmJshXRQUNaHjaFqJdiNqTECQQC1
+T0kQwMzTDN4ZysWs/oLtsL4Ul0X9q8mao0gcB49snOuq+cP3XbHU4wmcWiTDBF3J
+rmEuFg/fhAwcKQYeuTEvAkEA4wCxtbUvAgETre9g9vWOkhZo+oqU3AZJF2/gQgis
+2ZO7L3tjvXTBfyi5unQ+uw15vti1+Oz6sfPD3n6hsRtovw==
+-----END RSA PRIVATE KEY-----
+";
+        if(openssl_sign($str,$sign,$appPrivateKey))
+            $sign = base64_encode($sign);
+        return $sign;
     }
 
 }
