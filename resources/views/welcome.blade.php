@@ -79,7 +79,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel success 2
+                    Welcome
                 </div>
             </div>
         </div>
