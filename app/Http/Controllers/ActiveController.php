@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\DownStream\HotmobiDownStream;
+use App\Http\Log\SourceLog;
 use App\Http\Repositories\AdvertisementRepository;
 use App\Http\Repositories\ChannelRepository;
 use App\Http\Repositories\StatisticdataRepository;
@@ -43,9 +45,7 @@ class ActiveController extends BaseController
         $channel_uuid = $request->get('uuid2');//渠道id
         $sys_click_id = $request->get('uuid3');//系统生成的click_id
         $url = $request->fullUrl();
-
-        $this->writeLog('source_conversion_url',['url' => $url,'ip'=>$request->get('ip')]);
-
+        SourceLog::writeSourceLog('source_conversion_url', ['url' => $url,'ip'=>$request->getClientIp()]);
         $conversion_count = $this->streamdata->getConversionCountBySysClickId($sys_click_id);
         if($conversion_count <= 0){
             $statistics_data = $this->statisticdata->byAdUuidAndClUuid($advertisement_uuid, $channel_uuid);
@@ -91,43 +91,10 @@ class ActiveController extends BaseController
     {
         switch ($type){
             case 'hotmobi':
-                $this->hotmobiConversionCallBack($params);
+                HotmobiDownStream::conversionCallBack($params);
                 break;
             default:
                 break;
         }
-    }
-
-    public function hotmobiConversionCallBack($params)
-    {
-        $rep_key = [
-            '/{wxidentify}/',
-            '/{clickid}/',
-            '/{clicktime}/',
-            '/{ip}/',
-            '/{idfa}/'
-        ];
-        $wxidentify = isset($params['wxidentify']) ? $params['wxidentify'] : "";
-        $clickid = isset($params['clickid']) ? $params['clickid'] : "";
-        $clicktime = isset($params['clicktime']) ? $params['clicktime'] : "";
-        $ip = isset($params['ip']) ? $params['ip'] : "";
-        $idfa = isset($params['idfa']) ? $params['idfa'] : "";
-        $rep_val = [
-            $wxidentify,
-            $clickid,
-            $clicktime,
-            $ip,
-            $idfa,
-        ];
-        $pre_url = "http://cpa.adunite.com/api/activate.api?wxidentify={wxidentify}&clickid={clickid}&clicktime={clicktime}&ip={ip}&idfa={idfa}";
-        $url = preg_replace($rep_key, $rep_val, $pre_url);
-        $res = $this->client->request('GET', $url);
-        $logData = [
-            'url' => $url,
-            'data' => [],
-            'retheadercode' => $res->getStatusCode(),
-            'body' => $res->getBody()->getContents(),
-        ];
-        $this->writeLog('conversion',$logData);
     }
 }

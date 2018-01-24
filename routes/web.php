@@ -17,6 +17,5 @@ Route::get('/', function () {
 
 Route::post('/deploy','DeploymentController@deploy');
 
-Route::get('/click/{ad_uuid}/{ch_uuid}/to','ClickController@to');
-Route::get('/paipaidai','PaiPaiDaiController@index');
+Route::get('/click/{ad_uuid}/{ch_uuid}/to','ClickV1Controller@to');
 Route::get('/active','ActiveController@index');

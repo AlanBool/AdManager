@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Webpatser\Uuid\Uuid;
 
+//废弃
 class ClickController extends BaseController
 {
     public $advertisement;
@@ -40,6 +41,7 @@ class ClickController extends BaseController
 
     public function to(Request $request)
     {
+        return;
         $advertisement_uuid = $request->route()->parameter('ad_uuid'); // {user}
         $channel_uuid = $request->route()->parameter('ch_uuid'); // {role}
         $idfa = $request->get('idfa');
