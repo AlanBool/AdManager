@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\DealChannelRequestData\Dotinapp;
 use App\Http\DealChannelRequestData\Hotmobi;
 use App\Http\Log\SourceLog;
 use App\Http\Repositories\AdvertisementRepository;
@@ -68,7 +69,10 @@ class ClickV1Controller extends BaseController
         $channelObject = "";
         switch ($cl->type){
             case 'hotmobi':
-                    $channelObject = new Hotmobi($data);
+                $channelObject = new Hotmobi($data);
+                break;
+            case 'dotinapp':
+                $channelObject = new Dotinapp($data);
                 break;
             default:
                 break;

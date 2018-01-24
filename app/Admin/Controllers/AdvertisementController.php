@@ -100,10 +100,13 @@ class AdvertisementController extends Controller
                         case 'hotmobi':
                                 $url = env('API_URL').'click/'.$this->uuid.'/'.$channel['token'].'/to?idfa={idfa}&ip={ip}&useragent={useragent}&clicktime={clicktime}&wxidentify={wxidentify}&clickid={clickid}';
                             break;
+                        case 'dotinapp':
+                            $url = env('API_URL').'click/'.$this->uuid.'/'.$channel['token'].'/to?appid=id'. $this->id .'&pid='. $channel['name'] .'&idfa={idfa}&ip={ip}&ua={ua}&timestamp={timestamp}&clickid={clickid}';
+                            break;
                         default:
                             break;
                     }
-                    return  "<span class='label label-success'>{$channel['name']} : </span>".$url;
+                    return  "<span class='label label-success'>{$channel['name']} : </span>".htmlentities($url);
                 }, $channels);
                 return join('<br/>', $channels);
             });
