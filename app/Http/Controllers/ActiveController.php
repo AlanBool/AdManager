@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\DownStream\DotinappDownStream;
 use App\Http\DownStream\HotmobiDownStream;
 use App\Http\Log\SourceLog;
 use App\Http\Repositories\AdvertisementRepository;
@@ -92,6 +93,9 @@ class ActiveController extends BaseController
         switch ($type){
             case 'hotmobi':
                 HotmobiDownStream::conversionCallBack($params);
+                break;
+            case 'dotinapp':
+                DotinappDownStream::conversionCallBack($params);
                 break;
             default:
                 break;
